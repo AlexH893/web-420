@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Composer API 
+  description: YAML is used to describe the Composer API
+paths:
+  /createComposer:
+    description: Adding a new composer
+    post:
+      summary: Creating new composer  
+      description: |
+        Adding new composer
+      requestBody:
+        description: Information of composer
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object 
+              required:
+                - name fields
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        '200':
+          description: Successful creation
+        '500':
+          description: Server Exceptions
+        '501':
+          description: MongoDB Exceptions
+  /findComposerById/{id}:
+    get:
+      description: Search for a composer by ID
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string        
+        description: The requested ID
+      responses:
+        '200':
+          description: Successful creation
+        '500':
+          description: Server Exceptions
+        '501':
+          description: MongoDB Exceptions     
+  /findAllComposers:
+    get:
+      description: Search for all composers  
+      responses:
+        '200':
+          description: Composer documents
+        '500':
+          description: Server Exceptions
+        '501':
+          description: MongoDB Exceptions            
