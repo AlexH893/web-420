@@ -1,3 +1,8 @@
+# Title: haefner-composers.yml
+# Author: Alex Haefner
+# Date: 6-12-2021
+# Description: My first yml file describing composers API
+
 openapi: 3.0.0
 info:
   version: 1.0.0
