@@ -1,10 +1,10 @@
 {
     "name": "web-420",
-    "author": "Alex Haefner",
+    "author": "Professor Krasso",
     "private": true,
     "version": "1.0.0",
     "scripts": {
-        "start": "nodemon app.js"
+      "start": "nodemon app.js"
     },
     "dependencies": {
         "bluebird": "^3.7.2",

@@ -1,61 +1,73 @@
+  
 /*
-============================================
-; Title:  app.js
-; Author: Alex Haefner
-; Date:   25 May 2021
-; Description: app.js
-;===========================================
+=======================================================
+  Title: app.js
+  Author: Professor Krasso
+  Date: 06/02/2021
+  Modified by: Alex Haefner
+  Description: 
+========================================================
 */
 
-//Importing express library
-var express = require("express");
-
-//Importing http library
-var http = require("http");
-
-//Importing swagger-UI-express library
-var swaggerUi = require('swagger-ui-express');
-
-//Importing swagger-jsdoc library
+// Requirement statements. 
+var express = require('express');
+var http = require('http');
+var swaggerUIExpress = require('swagger-ui-express');
 var swaggerJSDoc = require('swagger-jsdoc');
+var mongoose = require("mongoose");
 
-//Importing mongoose library
-var mongoose = require('mongoose');
+var myRoutes = require('./routes/haefner-composer-routes.js')
 
-//Registering app
+
+// Link to mongoDB. 
+var mongoDB = "mongodb+srv://admin:Piplup893@buwebdev-cluster-1.8auop.mongodb.net/web420DB?retryWrites=true&w=majority";
+//var mongoDB = "mongodb+srv://web420_user:Piplup893@buwebdev-cluster-1.8auop.mongodb.net/test?authSource=admin&replicaSet=atlas-b5wufs-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true";
+
+// Mongoose connection. 
+mongoose.connect(mongoDB, {
+});
+
+mongoose.Promise = global.Promise;
+
+var db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "MongoDB connection error: "));
+
+db.once("open", function() {
+    console.log("Application connected to MongoDB instance");
+});
+
+//Variable to express library. 
 var app = express();
 
-//Setting the port to process.env.PORT || 3000 
-app.set("port", process.env.PORT || 3000);
+//Set the port.
+app.set("port", process.env.PORT || 3000)
 
-//Setting the app to use express.json
+//Set app to use express.json
 app.use(express.json());
 
-//Middleware function that parses incoming requests
-app.use(express.urlencoded({
-     'extended': true
-    }));
+//Set app to use express.urlencoded
+app.use(express.urlencoded({extended: true}));
 
+app.use('/api', myRoutes)
+
+//Define options with properties/values. 
 const options = {
-
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'WEB 420 RESTFul APIs',
-            version: '1.0.0',
+            title: 'WEB 420 RESTful APIs',
+            version: '1.0.0', 
         },
-    },
-    apis: ['./routes/*.js'], //Files containing annotations for the OpenAPI specification
+    }, 
+    apis: ['./routes/*.js'], //files containing annotations for openAPI specifications. 
 };
 
-//Creating new var, calling swaggerJSDoc library using the options object literal
-var openapiSpecification = swaggerJSDoc(options);
+const openAPISpecification = swaggerJSDoc(options);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
+app.use('/api-docs', swaggerUIExpress.serve, swaggerUIExpress.setup(openAPISpecification));
 
-
-
-//creating server, listening on port 3000
-http.createServer(app).listen(3000, function() {
-    console.log('App started on port 3000!');
+//Create server and listen on port 3000.
+http.createServer(app).listen(app.get("port"), function() {
+    console.log('Application started and listening on port %s', + app.get("port"))
 });
