@@ -18,7 +18,7 @@ const Persons = require("../models/haefner-person.js");
  * findAllPersons
  * @openapi
  * /api/persons:
- *   GET:
+ *   get:
  *     tags:
  *       - Persons
  *     description: API for returning an array of persons.
@@ -87,7 +87,7 @@ router.get('/persons', async(req, res) => {
  * 
  *     responses:
  *       '200':
- *         description: Person added
+ *         description: Array of person documents
  *       '500':
  *         description: Server Exception
  *       '501':
@@ -95,12 +95,16 @@ router.get('/persons', async(req, res) => {
  */
  router.post('/persons', async(req, res) => {
     try {
+        //Create new object literal named newPerson and map the RequesBody fields to its properties 
         const newPersons = {
             firstName: req.body.firstName,
-            lastName: req.body.lastName
+            lastName: req.body.lastName,
+            roles: req.body.role,
+            dependents: req.body.dependents,
+            birthDate: req.body.birthDate
         }
 
-        await Person.create(newPersons, function(err, persons) {
+        await Persons.create(newPersons, function(err, persons) {
 
             if (err) {
 
@@ -110,8 +114,8 @@ router.get('/persons', async(req, res) => {
                     'message': `MongoDB Exception: ${err}`
                 })
             } else {
-                console.log(person);
-                res.json(person);
+                console.log(persons);
+                res.json(persons);
             }
         })
     } catch (e) {
@@ -123,3 +127,5 @@ router.get('/persons', async(req, res) => {
         })
     }
 })
+
+module.exports = router 

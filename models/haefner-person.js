@@ -15,14 +15,14 @@ const Schema = mongoose.Schema;
 
 //Creating new schema with fields
 const roleSchema = new Schema ({
-    text: { type: String },
+    text: { type: String }
 });
 
 
 //Creating new schema with fields
 const dependentSchema = new Schema ({
     firstName: { type: String },
-    lastName: { type: String },
+    lastName: { type: String }
 });
 
 
@@ -30,11 +30,12 @@ const dependentSchema = new Schema ({
 const personSchema = new Schema ({
     firstName: { type: String },
     lastName: { type: String },
-    roles: { type: array }, [roleSchema],
-    dependents: { type: array }, [dependentSchema],
-    birthDate: { type: String },
+    roles:  { type: Array }, //[roleSchema] { type: array }, 
+    dependents: { type: Array }, //[dependentSchema], { type: array },
+    birthDate: { type: String }
 
 });
 
 //Name the model "Person" and export it using module.exports
 module.exports = mongoose.model('Person', personSchema);
+

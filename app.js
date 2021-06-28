@@ -16,12 +16,13 @@ var swaggerUIExpress = require('swagger-ui-express');
 var swaggerJSDoc = require('swagger-jsdoc');
 var mongoose = require("mongoose");
 
-var myRoutes = require('./routes/haefner-composer-routes.js')
+
+//var composerRoutes = require('./routes/haefner-composer-routes.js')
+var personRoutes = require('./routes/haefner-person-routes.js')
 
 
 // Link to mongoDB. 
 var mongoDB = "mongodb+srv://admin:Piplup893@buwebdev-cluster-1.8auop.mongodb.net/web420DB?retryWrites=true&w=majority";
-//var mongoDB = "mongodb+srv://web420_user:Piplup893@buwebdev-cluster-1.8auop.mongodb.net/test?authSource=admin&replicaSet=atlas-b5wufs-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true";
 
 // Mongoose connection. 
 mongoose.connect(mongoDB, {
@@ -49,7 +50,9 @@ app.use(express.json());
 //Set app to use express.urlencoded
 app.use(express.urlencoded({extended: true}));
 
-app.use('/api', myRoutes)
+app.use('/api', personRoutes)
+//app.use('/api', composerRoutes, personRoutes)
+
 
 //Define options with properties/values. 
 const options = {
