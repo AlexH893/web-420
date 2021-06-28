@@ -3,7 +3,7 @@
 ; Title:  haefner-person-routes.js
 ; Author: Alex Haefner
 ; Date:   25 Jun 2021
-; Description: script
+; Description: Routes for persons
 ; Sources: 
 ;===========================================
 */
@@ -20,12 +20,12 @@ const Persons = require("../models/haefner-person.js");
  * /api/persons:
  *   get:
  *     tags:
- *       - Persons
- *     description: API for returning an array of persons.
- *     summary: returns an array of persons in JSON format.
+ *       - Person
+ *     description: An API for returning array containing persons
+ *     summary: returns array of persons in formatted in JSON
  *     responses:
  *       '200':
- *         description: Array of the persons
+ *         description: Array of persons
  *       '500':
  *         description: Server Exception
  *       '501':
@@ -67,10 +67,10 @@ router.get('/persons', async(req, res) => {
  * /api/persons:
  *   post:
  *     tags:
- *       - Persons
+ *       - Person
  *     name: createPerson
- *     description: Adding new persons document to MongoDB Atlas
- *     summary: Create a new persons document
+ *     description: An API for adding new person doc to MongoDB Atlas
+ *     summary: Create new person doc
  *     requestBody:
  *       description: Person information
  *       content:
@@ -79,15 +79,36 @@ router.get('/persons', async(req, res) => {
  *             required:
  *               - firstName
  *               - lastName
+ *               - roles
+ *               - dependents
+ *               - birthDate
  *             properties:
  *              firstName:
  *                 type: string
  *              lastName:
  *                 type: string
+ *              roles:
+ *                  type: array
+ *                  items:
+ *                      type: object
+ *                      properties:
+ *                          Role Title:
+ *                              type: string
+ *              dependents:
+ *                  type: array
+ *                  items:
+ *                      type: object
+ *                      properties:
+ *                          firstName:
+ *                              type: string
+ *                          lastName:
+ *                              type: string
+ *              birthDate:
+ *                  type: string
  * 
  *     responses:
  *       '200':
- *         description: Array of person documents
+ *         description: Person added
  *       '500':
  *         description: Server Exception
  *       '501':

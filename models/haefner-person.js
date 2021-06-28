@@ -3,7 +3,7 @@
 ; Title:  haefner-person.js
 ; Author: Alex Haefner
 ; Date:   25 Jun 2021
-; Description: script
+; Description: Mongoose import, create schema, export model
 ; Sources: https://mongoosejs.com/docs/schematypes.html
 ;===========================================
 */
@@ -30,8 +30,8 @@ const dependentSchema = new Schema ({
 const personSchema = new Schema ({
     firstName: { type: String },
     lastName: { type: String },
-    roles:  { type: Array }, //[roleSchema] { type: array }, 
-    dependents: { type: Array }, //[dependentSchema], { type: array },
+    roles: [roleSchema],
+    dependents: [dependentSchema], 
     birthDate: { type: String }
 
 });
