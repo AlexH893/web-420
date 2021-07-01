@@ -1,0 +1,34 @@
+[{
+  "_id": {
+    "$oid": "60d1452fcfb2639c96bba20b"
+  },
+  "first_name": "Johann",
+  "last_name": "Bach",
+  "employee_id": "011223",
+  "email": "jbach@usa.net",
+  "date_created": {
+    "$date": "2021-06-22T02:02:31.018Z"
+  }
+},{
+  "_id": {
+    "$oid": "60d145b8cfb2639c96bba20d"
+  },
+  "first_name": "Billie",
+  "last_name": "Eilish",
+  "employee_id": "011225",
+  "email": "beilish@me.com",
+  "date_created": {
+    "$date": "2021-06-22T02:06:45.221Z"
+  }
+},{
+  "_id": {
+    "$oid": "60d145eecfb2639c96bba20e"
+  },
+  "first_name": "Noble",
+  "last_name": "Man",
+  "employee_id": "011226",
+  "email": "nman@me.com",
+  "date_created": {
+    "$date": "2021-06-22T02:07:34.167Z"
+  }
+}]
