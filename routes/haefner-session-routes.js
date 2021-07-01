@@ -54,31 +54,52 @@ const saltRounds = 10;
  *       '501':
  *         description: MongoDB Exception
  */
- router.post('/persons', async(req, res) => {
+ router.post('/signup', async(req, res) => {
+
     try {
-        //Create new object literal named newPerson and map the RequesBody fields to its properties 
-        const newPersons = {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            roles: req.body.role,
-            dependents: req.body.dependents,
-            birthDate: req.body.birthDate
-        }
 
-        await Persons.create(newPersons, function(err, persons) {
+        User.findOne({'userName': req.params.userName}, function(err, user) {
 
-            if (err) {
+            //Create object literal named newRegisteredUser, map the RequestBody values to the object’s properties
+            if(!User) {
+                const newRegisteredUser = {
+                    userName: req.body.userName,
+                    password: req.body.password,
+                    emailAddress: req.body.emailAddress
 
-                console.log(err);
-                res.status(501).send({
+                };
+                let hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
 
-                    'message': `MongoDB Exception: ${err}`
+                //Call the create() function on the User model and save the record to MongoDB
+                await User.create(newRegisteredUser, function(err, user) {
+
+                    if (err) {
+
+                        console.log(err);
+                        res.status(501).send({
+
+                        'message': `MongoDB Exception: ${err}`
+
+                        })
+
+                    } else {
+
+                        console.log(user);
+                        res.json(user);
+                    }
                 })
-            } else {
-                console.log(persons);
-                res.json(persons);
+
+            } else if(User) {
+
+                
+                res.status(401).send({
+
+                'message': `Username is already in use`
+
+                })
             }
         })
+
     } catch (e) {
 
         console.log(e);
