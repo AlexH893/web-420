@@ -61,7 +61,7 @@ const saltRounds = 10;
         User.findOne({'userName': req.params.userName}, function(err, user) {
 
             //Create object literal named newRegisteredUser, map the RequestBody values to the object’s properties
-            if(!user) { 
+            if(!User) { 
                 const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
                 const newRegisteredUser = {
                     userName: req.body.userName,
@@ -91,7 +91,7 @@ const saltRounds = 10;
                     }
                 })
 
-            } else if(user) {
+            } else if(User) {
 
                 
                 res.status(401).send({
