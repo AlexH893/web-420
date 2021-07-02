@@ -61,7 +61,7 @@ const saltRounds = 10;
         User.findOne({'userName': req.params.userName}, function(err, user) {
 
             //Create object literal named newRegisteredUser, map the RequestBody values to the object’s properties
-            if(!user) { //was if(!User)
+            if(!user) { 
                 const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
                 const newRegisteredUser = {
                     userName: req.body.userName,
@@ -164,7 +164,7 @@ const saltRounds = 10;
             if(user) {
 
                 //Compare the RequestBody password against the saved user’s password using the bcrypt.compareSync() function
-                let passwordIsValid = bcrypt.compareSync(req.body.password, user.password); //error here, was user.password
+                let passwordIsValid = bcrypt.compareSync(req.body.password, user.password); //had error here
 
                 //Checks if password is valid
                 if(passwordIsValid) {
