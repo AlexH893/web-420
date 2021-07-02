@@ -18,7 +18,8 @@ var mongoose = require("mongoose");
 
 
 //var composerRoutes = require('./routes/haefner-composer-routes.js')
-var personRoutes = require('./routes/haefner-person-routes.js')
+//var personRoutes = require('./routes/haefner-person-routes.js');
+var sessionRoutes = require('./routes/haefner-session-routes.js');
 
 
 // Link to mongoDB. 
@@ -50,8 +51,8 @@ app.use(express.json());
 //Set app to use express.urlencoded
 app.use(express.urlencoded({extended: true}));
 
-app.use('/api', personRoutes)
-//app.use('/api', composerRoutes, personRoutes)
+app.use('/api', sessionRoutes)
+//app.use('/api', composerRoutes, personRoutes, sessionRoutes)
 
 
 //Define options with properties/values. 

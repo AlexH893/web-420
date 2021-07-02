@@ -23,7 +23,7 @@ const saltRounds = 10;
  * Signup
  * @openapi
  * /api/signup:
- *   POST:
+ *   post:
  *     tags:
  *       - Sign up
  *     name: signup
@@ -48,7 +48,7 @@ const saltRounds = 10;
  *       '200':
  *         description: Registered user
  *       '401':
- *         description: Username is already in use
+ *         description: UserName is already in use
  *       '500':
  *         description: Server Exception
  *       '501':
@@ -61,17 +61,18 @@ const saltRounds = 10;
         User.findOne({'userName': req.params.userName}, function(err, user) {
 
             //Create object literal named newRegisteredUser, map the RequestBody values to the object’s properties
-            if(!User) {
+            if(!user) { //was if(!User)
+                const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
                 const newRegisteredUser = {
                     userName: req.body.userName,
                     password: req.body.password,
                     emailAddress: req.body.emailAddress
 
-                };
-                let hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
+                }
+
 
                 //Call the create() function on the User model and save the record to MongoDB
-                await User.create(newRegisteredUser, function(err, user) {
+                /*await*/ User.create(newRegisteredUser, function(err, user) {
 
                     if (err) {
 
@@ -85,18 +86,20 @@ const saltRounds = 10;
                     } else {
 
                         console.log(user);
+                        
                         res.json(user);
                     }
                 })
 
-            } else if(User) {
+            } else if(user) {
 
                 
                 res.status(401).send({
 
-                'message': `Username is already in use`
+                    'message': `UserName is already in use`
 
                 })
+
             }
         })
 
@@ -115,7 +118,7 @@ const saltRounds = 10;
  * Login
  * @openapi
  * /api/login:
- *   POST:
+ *   post:
  *     tags:
  *       - Log in
  *     name: login
@@ -137,7 +140,7 @@ const saltRounds = 10;
  *       '200':
  *         description: User logged in
  *       '401':
- *         description: Invalid username and/or password
+ *         description: Invalid userName and/or password
  *       '500':
  *         description: Server Exception
  *       '501':
@@ -149,11 +152,19 @@ const saltRounds = 10;
 
         User.findOne({'userName': req.params.userName}, function(err, user) {
 
+            if (err) {
+                console.log(err);
+                res.status(501).send({
+                    'message': `MongoDB Exception: ${err}`
+                })
+            } else {
+                console.log(user);
+            }
             //Create object literal named newRegisteredUser, map the RequestBody values to the object’s properties
-            if(User) {
+            if(user) {
 
                 //Compare the RequestBody password against the saved user’s password using the bcrypt.compareSync() function
-                let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+                let passwordIsValid = bcrypt.compareSync(req.body.password, user.password); //error here, was user.password
 
                 //Checks if password is valid
                 if(passwordIsValid) {
@@ -163,23 +174,16 @@ const saltRounds = 10;
                         res.status(200).send({
                             'message': 'User logged in'
                         })
-                } else {
+                } else if(!user) {
                         //Returns message for status 401
                         console.log('Password is invalid!');
                         res.status(401).send({
-                            'message': 'Invalid username and/or password'
+                            'message': 'Invalid userName and/or password'
                         })
                 }
 
 
-            } else if(!User) {
-
-                //Returns message for status 401
-                res.status(401).send({
-                    'message': `Invalid username and/or password`
-
-                })
-            }
+            } 
         })
 
     } catch (e) {
