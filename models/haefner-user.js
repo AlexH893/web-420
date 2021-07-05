@@ -9,16 +9,16 @@
 */
 
 //Importing Mongoose lib & assigning it to a variable named mongoose
-let mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 //Add a new variable named Schema and assign it the mongoose.Schema object
 const Schema = mongoose.Schema;
 
 //Creating schema with fields
-const userSchema = new Schema ({
+let userSchema = new Schema({
     userName: { type: String },
     password: { type: String },
-    emailAddress: { type: Array }
+    emailAddress: { type: Array },
 });
 
 //Name the model "User" and export it 

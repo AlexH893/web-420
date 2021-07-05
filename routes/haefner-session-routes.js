@@ -3,7 +3,7 @@
 ; Title:  haefner-session-routes.js
 ; Author: Alex Haefner
 ; Date:   1 Jul 2021
-; Description: Routes for users
+; Description: Routes for user
 ; Sources: 
 ;===========================================
 */
@@ -39,11 +39,11 @@ const saltRounds = 10;
  *               - emailAddress
  *             properties:
  *              userName:
- *                 type: string
+ *                 type: String
  *              password:
- *                 type: string
+ *                 type: String
  *              emailAddress:
- *                  type: string
+ *                  type: String
  *     responses:
  *       '200':
  *         description: Registered user
@@ -54,65 +54,49 @@ const saltRounds = 10;
  *       '501':
  *         description: MongoDB Exception
  */
- router.post('/signup', async(req, res) => {
-
+router.post('/signup', async (req, res) => {
     try {
+        User.findOne({
+            'userName': req.body.userName
+        }, function(err, user) {
 
-        User.findOne({'userName': req.params.userName}, function(err, user) {
-
-            //Create object literal named newRegisteredUser, map the RequestBody values to the object’s properties
-            if(!User) { 
+            //Create object literal named newRegisteredUser, map the RequestBody values to the object's properties
+            if (!user) {
                 const hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
                 const newRegisteredUser = {
                     userName: req.body.userName,
-                    password: req.body.password,
-                    emailAddress: req.body.emailAddress
+                    password: hashedPassword,
+                    emailAddress: req.body.emailAddress,
 
-                }
-
+                };
 
                 //Call the create() function on the User model and save the record to MongoDB
-                /*await*/ User.create(newRegisteredUser, function(err, user) {
+                User.create(newRegisteredUser, function(err, user) {
+            if (err) {
 
-                    if (err) {
+                console.log(err);
+                res.status(501).send({
 
-                        console.log(err);
-                        res.status(501).send({
-
-                        'message': `MongoDB Exception: ${err}`
-
-                        })
-
-                    } else {
-
-                        console.log(user);
-                        
-                        res.json(user);
-                    }
+                    'message': `MongoDB Exception: ${err}`
                 })
-
-            } else if(User) {
-
-                
-                res.status(401).send({
-
-                    'message': `UserName is already in use`
-
+            } else {
+                console.log(user);
+                res.json(user);
+            }
                 })
+            }
+            if (user) {
+                                console.log(user);
+
+                res.status(401).send("Username is already in use");
 
             }
         })
 
-    } catch (e) {
-
-        console.log(e);
-        res.status(500).send({
-            
-            'message': `Server Exception: ${e.message}`
-        })
+    } catch (error) {
+        res.status(500).send("server exception")
     }
 })
-
 
 /**
  * Login
@@ -133,9 +117,9 @@ const saltRounds = 10;
  *               - password
  *             properties:
  *              userName:
- *                 type: string
+ *                 type: String
  *              password:
- *                 type: string
+ *                 type: String
  *     responses:
  *       '200':
  *         description: User logged in
@@ -146,53 +130,32 @@ const saltRounds = 10;
  *       '501':
  *         description: MongoDB Exception
  */
- router.post('/login', async(req, res) => {
-
+router.post('/login', async (req, res) => {
     try {
-
-        User.findOne({'userName': req.params.userName}, function(err, user) {
-
-            if (err) {
-                console.log(err);
-                res.status(501).send({
-                    'message': `MongoDB Exception: ${err}`
-                })
-            } else {
-                console.log(user);
-            }
-            //Create object literal named newRegisteredUser, map the RequestBody values to the object’s properties
-            if(user) {
-
-                //Compare the RequestBody password against the saved user’s password using the bcrypt.compareSync() function
-                let passwordIsValid = bcrypt.compareSync(req.body.password, user.password); //had error here
+        User.findOne({
+            'userName': req.body.userName
+        }, function(err, user) {
+            if (err) res.status(501).send("MongoDB exception")
+            
+            //Create object literal named newRegisteredUser, map the RequestBody values to the objects properties
+            if (user) {
+                //Compare the RequestBody password against the saved users password using the bcrypt.compareSync() function
+                let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
                 //Checks if password is valid
-                if(passwordIsValid) {
-
-                        //Returns message for status 200
-                        console.log('Password is valid!');
-                        res.status(200).send({
-                            'message': 'User logged in'
-                        })
-                } else if(!user) {
-                        //Returns message for status 401
-                        console.log('Password is invalid!');
-                        res.status(401).send({
-                            'message': 'Invalid userName and/or password'
-                        })
+                if (passwordIsValid) {
+                    //Returns message for status 200
+                    console.log('Password is valid!');
+                    res.status(200).send({'message': 'User logged in'})
+                } else {
+                    res.status(401).send("Invalid username and/or password")
                 }
+            }
 
-
-            } 
-        })
-
-    } catch (e) {
-
-        console.log(e);
-        res.status(500).send({
-            
-            'message': `Server Exception: ${e.message}`
-        })
+            if (!user) res.status(401).send("Invalid username and/or password")
+        });
+    } catch (error) {
+        res.status(500).send("server exception")
     }
 })
 
