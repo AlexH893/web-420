@@ -14,24 +14,20 @@ let mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 //Creating schema with fields
-let lineItemSchema = new Schema({
-
-    name: { type: String},
+let lineItemSchema = new Schema ({
+    name: { type: String },
     price: { type: Number },
-    quantity: { type: Number}
-
-});
+    quantity: { type: Number },
+})
 
 //Creating schema with fields
-let invoiceSchema = new Schema({
-
-    subtotal: { type: Number},
+let invoiceSchema = new Schema ({
+    subtotal: { type: Number },
     tax: { type: Number },
     dateCreated: { type: String },
     dateShipped: { type: String },
-    lineItems: [ lineItemSchema ]
-
-});
+    lineItems: [lineItemSchema],
+})
 
 
 //Creating schema with fields
@@ -40,7 +36,7 @@ let customerSchema = new Schema({
     firstName: { type: String},
     lastName: { type: String },
     userName: { type: String},
-    invoices: [ invoiceSchema ]
+    invoices: [ invoiceSchema ],
 
 });
 
