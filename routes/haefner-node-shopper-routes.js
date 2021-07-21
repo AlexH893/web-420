@@ -235,7 +235,7 @@ router.get('/customers/:userName/invoices', async(req, res) => {
                 } else {
 
                     console.log(customer);
-                res.status(200).send (customer.invoices)
+                    res.status(200).send (customer.invoices)
                 }
         })
 
