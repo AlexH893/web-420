@@ -17,7 +17,7 @@ const router = express.Router();
 /**
  * findAllComposers
  * @openapi
- * /api/composer
+ * /api/composers:
  *   get:
  *     tags:
  *       - Composers
@@ -25,11 +25,11 @@ const router = express.Router();
  *     summary: returns an array of composers in JSON format.
  *     responses:
  *       '200':
- *         description: Array of the composers
+ *         description: array of composers.
  *       '500':
- *         description: Server Exception
+ *         description: Server Exception.
  *       '501':
- *         description: MongoDB Exception
+ *         description: MongoDB Exception.
  */
 
 router.get('/composer', async(req, res) => {
@@ -65,13 +65,14 @@ router.get('/composer', async(req, res) => {
  *   get:
  *     tags:
  *       - Composers
- *     description:  Returning composer doc
- *     summary:
+ *     name: findComposerById 
+ *     description:  API for returning a composer document
+ *     summary: returns a composer document based on entered id
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: Composer document ID
+ *         description: Composer document id
  *         schema:
  *           type: string
  *     responses:
@@ -127,12 +128,14 @@ router.get('/composer', async(req, res) => {
  *             required:
  *               - firstName
  *               - lastName
+ *               - id
  *             properties:
  *              firstName:
- *                 type: string
+ *                 type: String
  *              lastName:
- *                 type: string
- * 
+ *                 type: String
+*              id:
+ *                 type: Number
  *     responses:
  *       '200':
  *         description: Composer added
@@ -145,7 +148,8 @@ router.get('/composer', async(req, res) => {
     try {
         const newComposer = {
             firstName: req.body.firstName,
-            lastName: req.body.lastName
+            lastName: req.body.lastName,
+            id: req.body.id
         }
 
         await Composer.create(newComposer, function(err, composer) {
@@ -175,22 +179,22 @@ router.get('/composer', async(req, res) => {
 /**
  * updateComposerById
  * @openapi
- * /api/composers/:id
+ * /api/composers/{id}:
  *   put:
  *     tags:
- *       - Composer
- *     name: update composer
+ *       - Composers
+ *     name: updateComposerById
  *     description: API for updating an existing composer document in MongoDB
- *     summary: Updates a document in MongoDB
+ *     summary: Updates a composer document in MongoDB based on id
  *     parameters:
  *       - name: id
  *         in: path
  *         required: true
- *         description: Id is used to filter the collection by 
+ *         description: Id to filter the collection by 
  *         schema: 
  *           type: string
  *     requestBody:
- *       description: Information of composer
+ *       description: Composer information
  *       content:
  *         application/json:
  *           schema:
@@ -204,7 +208,7 @@ router.get('/composer', async(req, res) => {
  *                 type: string
  *     responses:
  *       '200':
- *         description: Array of composer documents
+ *         description: Composer added
  *       '401':
  *         description: Invalid composerId
  *       '500':
@@ -213,7 +217,7 @@ router.get('/composer', async(req, res) => {
  *         description: MongoDB Exception
  */
 
-    router.put(/'/composers/:id', async (req, res) => {
+    router.put('/composers/:id', async (req, res) => {
         try {
 
             Composer.findOne({'_id': req.params.id}, function(err, composer) {
@@ -228,7 +232,7 @@ router.get('/composer', async(req, res) => {
 
                 } else {
 
-                    console.log(compoer);
+                    console.log(composer);
                     //Update the returned composer object by using the set() function and mapping
                     //the RequestBody fields to the returned objects parameters
                     composer.set({
@@ -264,11 +268,68 @@ router.get('/composer', async(req, res) => {
     })
 
 
+/**
+ * deleteComposerById
+ * @openapi
+ * /api/composers/{id}:
+ *   delete:
+ *     tags:
+ *       - Composers
+ *     name: deleteComposer
+ *     description: API for deleting a document from MongoDB
+ *     summary: Removes a composer document from MongoDB
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: Id of the document to be deleted 
+ *         schema: 
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Composer document
+ *       '500':
+ *         description: Server Exception
+ *       '501':
+ *         description: MongoDB Exception
+ */
 
-   
+    router.delete('/composers/:id', async (req, res) => {
+        try {
+
+            Composer.findByIdAndDelete({'_id': req.params.id}, function(err, composer) {
+
+                if(err) {
+
+                    console.log(err);
+                    res.status(401).send({
+
+                        'message': `Invalid Composer Id: ${err}`
+
+                    })
+
+                } else {
 
 
+                    console.log(composer);
+                    console.log("Composer with the id of" + req.params.id +
+                     " has been deleted succesfully");
+                    res.json(composer);
 
+                }
+
+            })
+
+        } catch (e) {
+
+            console.log(e);
+            res.status(500).send({
+
+                'message': `Server Exception: ${e.message}`
+            })
+        }
+
+    })
 
 
 module.exports = router 
