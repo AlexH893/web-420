@@ -17,7 +17,8 @@ var swaggerJSDoc = require('swagger-jsdoc');
 var mongoose = require("mongoose");
 
 
-var composerRoutes = require('./routes/haefner-composer-routes.js')
+var teamsRoutes = require('./routes/haefner-teams-routes.js')
+//var composerRoutes = require('./routes/haefner-composer-routes.js')
 //var personRoutes = require('./routes/haefner-person-routes.js');
 //var sessionRoutes = require('./routes/haefner-session-routes.js');
 //var customerRoutes = require('./routes/haefner-node-shopper-routes.js');
@@ -52,7 +53,7 @@ app.use(express.json());
 //Set app to use express.urlencoded
 app.use(express.urlencoded({extended: true}));
 
-app.use('/api', composerRoutes)
+app.use('/api', teamsRoutes)
 //app.use('/api', composerRoutes, personRoutes, sessionRoutes, customerRoutes)
 
 
